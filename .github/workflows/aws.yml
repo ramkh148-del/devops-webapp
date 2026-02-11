@@ -21,3 +21,12 @@ jobs:
           key: ${{ secrets.EC2_KEY }}
           source: "index.html"
           target: "/var/www/html"
+
+      - name: Notify Microsoft Teams
+        uses: skitionek/notify-microsoft-teams@master
+        if: always() # This ensures it runs even if the deploy fails
+        with:
+          webhook_url: ${{ secrets.TEAMS_WEBHOOK_URL }}
+          needs_context: ${{ toJSON(needs) }}
+          job: ${{ toJSON(job) }}
+          steps: ${{ toJSON(steps) }}
